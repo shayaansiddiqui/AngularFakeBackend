@@ -7,17 +7,16 @@ import {
 	HttpRequest,
 	HttpResponse
 } from '@angular/common/http';
-import {Observable, of, throwError} from 'rxjs';
-import {delay, dematerialize, materialize} from 'rxjs/operators';
+import {delay, dematerialize, materialize, Observable, of, throwError} from 'rxjs';
 
 // array in local storage for registered users
-const usersKey = 'angular-10-registration-login-example-users';
+const usersKey = 'angular-14-registration-login-example-users';
 let users: any[] = JSON.parse(localStorage.getItem(usersKey)!) || [];
 
 @Injectable()
-export class FakeBackendInterceptor implements HttpInterceptor {
+export class FakebackendInterceptor implements HttpInterceptor {
 	intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-		const {url, method, headers, body} = request;
+		const { url, method, headers, body } = request;
 
 		return handleRoute();
 
@@ -44,7 +43,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 		// route functions
 
 		function authenticate() {
-			const {username, password} = body;
+			const { username, password } = body;
 			const user = users.find(x => x.username === username && x.password === password);
 			if (!user) return error('Username or password is incorrect');
 			return ok({
@@ -107,23 +106,23 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 		// helper functions
 
 		function ok(body?: any) {
-			return of(new HttpResponse({status: 200, body}))
+			return of(new HttpResponse({ status: 200, body }))
 				.pipe(delay(500)); // delay observable to simulate server api call
 		}
 
 		function error(message: string) {
-			return throwError(() => ({error: {message}}))
+			return throwError(() => ({ error: { message } }))
 				.pipe(materialize(), delay(500), dematerialize()); // call materialize and dematerialize to ensure delay even if an error is thrown (https://github.com/Reactive-Extensions/RxJS/issues/648);
 		}
 
 		function unauthorized() {
-			return throwError(() => ({status: 401, error: {message: 'Unauthorized'}}))
+			return throwError(() => ({ status: 401, error: { message: 'Unauthorized' } }))
 				.pipe(materialize(), delay(500), dematerialize());
 		}
 
 		function basicDetails(user: any) {
-			const {id, username, firstName, lastName} = user;
-			return {id, username, firstName, lastName};
+			const { id, username, firstName, lastName } = user;
+			return { id, username, firstName, lastName };
 		}
 
 		function isLoggedIn() {
@@ -140,6 +139,6 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 export const fakeBackendProvider = {
 	// use fake backend in place of Http service for backend-less development
 	provide: HTTP_INTERCEPTORS,
-	useClass: FakeBackendInterceptor,
+	useClass: FakebackendInterceptor,
 	multi: true
 };

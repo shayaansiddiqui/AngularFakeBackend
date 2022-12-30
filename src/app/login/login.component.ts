@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators, ɵElement, ɵValue} from '@angular/forms';
 import {ActivatedRoute, Router} from "@angular/router";
-import {fakeBackendProvider} from "../helpers/fakebackend.service";
+import {fakeBackendProvider} from "../helpers/fakebackend.interceptor";
 import {first} from "rxjs";
 import {AccountService} from "../_services/account.service";
 import {AlertService} from "../_services/alert.service";
